@@ -1,22 +1,34 @@
 using NUnit.Framework;
 using System;
-using UnityEngine.Rendering;
 using UnityEngine.Experimental.Rendering;
 using UnityEngine.Rendering.RenderGraphModule;
 using System.Collections.Generic;
 using UnityEngine.TestTools;
-using System.Collections;
 using Unity.Collections;
-using System.Linq;
-using System.IO;
-using System.Drawing.Drawing2D;
-using System.Runtime.ConstrainedExecution;
 
 #if UNITY_EDITOR
+using UnityEditor;
 using UnityEditor.Rendering;
 #endif
 namespace UnityEngine.Rendering.Tests
 {
+    [InitializeOnLoad]
+    class RenderGraphTestsOnLoad
+    {
+        static bool IsGraphicsAPISupported()
+        {
+            var gfxAPI = SystemInfo.graphicsDeviceType;
+            if (gfxAPI == GraphicsDeviceType.OpenGLCore)
+                return false;
+            return true;
+        }
+
+        static RenderGraphTestsOnLoad()
+        {
+            ConditionalIgnoreAttribute.AddConditionalIgnoreMapping("IgnoreGraphicsAPI", !IsGraphicsAPISupported());
+        }
+    }
+
     class RenderGraphTests
     {
         // For RG Record/Hash/Compile testing, use m_RenderGraph
@@ -811,7 +823,7 @@ namespace UnityEngine.Rendering.Tests
             var hash0 = m_RenderGraph.ComputeGraphHash();
             m_RenderGraph.ClearCompiledGraph();
 
-            texture0 = m_RenderGraph.CreateTexture(new TextureDesc(Vector2.one) { colorFormat = GraphicsFormat.R8G8B8A8_UNorm });
+            texture0 = m_RenderGraph.CreateTexture(new TextureDesc(Vector2.one) { format = GraphicsFormat.R8G8B8A8_UNorm });
 
             using (var builder = m_RenderGraph.AddRenderPass<RenderGraphTestPassData>("TestPass0", out var passData))
             {
@@ -847,7 +859,7 @@ namespace UnityEngine.Rendering.Tests
 
             static void RecordRenderGraph(RenderGraph renderGraph)
             {
-                TextureHandle texture0 = renderGraph.CreateTexture(new TextureDesc(Vector2.one) { colorFormat = GraphicsFormat.R8G8B8A8_UNorm });
+                TextureHandle texture0 = renderGraph.CreateTexture(new TextureDesc(Vector2.one) { format = GraphicsFormat.R8G8B8A8_UNorm });
 
                 using (var builder = renderGraph.AddRenderPass<RenderGraphTestPassData>("TestPass0", out var passData))
                 {
@@ -907,6 +919,58 @@ namespace UnityEngine.Rendering.Tests
         }
 
         [Test]
+        public void TextureDescFormatPropertiesWork()
+        {
+            var formatR32 = GraphicsFormat.R32_SFloat;
+
+            var textureDesc = new TextureDesc(16, 16);
+            textureDesc.format = formatR32;
+
+            Assert.AreEqual(textureDesc.colorFormat,formatR32);
+            Assert.AreEqual(textureDesc.depthBufferBits, DepthBits.None);
+
+            textureDesc.depthBufferBits = DepthBits.None;
+
+            //No change expected
+            Assert.AreEqual(textureDesc.colorFormat, formatR32);
+            Assert.AreEqual(textureDesc.depthBufferBits, DepthBits.None);
+
+            textureDesc.depthBufferBits = DepthBits.Depth32;
+
+            //Not entirely sure what the platform will select but at least it should be 24 or more (not 0)
+            Assert.IsTrue((int)textureDesc.depthBufferBits >= 24);
+            Assert.AreEqual(textureDesc.colorFormat, GraphicsFormat.None);
+
+            textureDesc.format = formatR32;
+
+            Assert.AreEqual(textureDesc.colorFormat, formatR32);
+            Assert.AreEqual(textureDesc.depthBufferBits, DepthBits.None);
+
+            textureDesc.format = GraphicsFormat.D16_UNorm;
+
+            Assert.AreEqual(textureDesc.depthBufferBits, DepthBits.Depth16);
+            Assert.AreEqual(textureDesc.colorFormat, GraphicsFormat.None);
+
+            {
+                var importedTexture = m_RenderGraph.CreateTexture(textureDesc);
+
+                var importedDesc = importedTexture.GetDescriptor(m_RenderGraph);
+                Assert.AreEqual(textureDesc.format, importedDesc.format);
+            }            
+
+            textureDesc.colorFormat = formatR32;
+            Assert.AreEqual(textureDesc.depthBufferBits, DepthBits.None);
+            Assert.AreEqual(textureDesc.colorFormat, textureDesc.format);
+
+            {
+                var importedTexture = m_RenderGraph.CreateTexture(textureDesc);
+
+                var importedDesc = importedTexture.GetDescriptor(m_RenderGraph);
+                Assert.AreEqual(textureDesc.format, importedDesc.format);
+            } 
+        }
+
+        [Test]
         public void ImportingBuiltinRenderTextureTypeWithNoInfoThrows()
         {
             RenderTargetIdentifier renderTargetIdentifier = new RenderTargetIdentifier(BuiltinRenderTextureType.CameraTarget);
@@ -917,6 +981,25 @@ namespace UnityEngine.Rendering.Tests
                 var importedTexture = m_RenderGraph.ImportTexture(renderTextureHandle);
             });
 
+            renderTextureHandle.Release();
+        }
+
+        [Test]
+        public void ImportingRenderTextureWithColorAndDepthThrows()
+        {
+            // Create a new RTHandle texture
+            var desc = new RenderTextureDescriptor(16, 16, GraphicsFormat.R8G8B8A8_UNorm, GraphicsFormat.D32_SFloat_S8_UInt);
+            var rt = new RenderTexture(desc) { name = "RenderTextureWithColorAndDepth"};
+
+            var renderTextureHandle = RTHandles.Alloc(rt);
+
+            Assert.Throws<Exception>(() =>
+            {
+                var importedTexture = m_RenderGraph.ImportTexture(renderTextureHandle);
+            });
+
+            renderTextureHandle.Release();
+            rt.Release();
         }
 
         [Test]
@@ -1166,7 +1249,7 @@ namespace UnityEngine.Rendering.Tests
 
             // Create a new RTHandle texture
             var redTextureHandle = RTHandles.Alloc(width, height,
-                                               colorFormat: GraphicsFormat.R8G8B8A8_UNorm,
+                                               GraphicsFormat.R8G8B8A8_UNorm,
                                                dimension: TextureDimension.Tex2D,
                                                useMipMap: false,
                                                autoGenerateMips: false,
@@ -1190,6 +1273,90 @@ namespace UnityEngine.Rendering.Tests
 
             // Cleanup the temporary texture
             return redTextureHandle;
+        }
+
+        class TestBuffersImport
+        {
+            public BufferHandle bufferHandle;
+            public ComputeShader computeShader;
+        }
+
+        private const string kPathToComputeShader = "Packages/com.unity.render-pipelines.core/Tests/Editor/BufferCopyTest.compute";
+
+        [Test, ConditionalIgnore("IgnoreGraphicsAPI", "Compute Shaders are not supported for this Graphics API.")]
+        public void ImportingBufferWorks()
+        {
+            // We need a real ScriptableRenderContext and a camera to execute the render graph
+            // add the default camera
+            var gameObject = new GameObject("testGameObject")
+            {
+                hideFlags = HideFlags.HideAndDontSave,
+                tag = "MainCamera"
+            };
+            var camera = gameObject.AddComponent<Camera>();
+#if UNITY_EDITOR
+            var computeShader = AssetDatabase.LoadAssetAtPath<ComputeShader>(kPathToComputeShader);
+#else
+            var computeShader = Resources.Load<ComputeShader>("_" + Path.GetFileNameWithoutExtension(kPathToComputeShader));
+#endif
+            // Check if the compute shader was loaded successfully
+            if (computeShader == null)
+            {
+                Debug.LogError("Compute Shader not found!");
+                return;
+            }
+
+            // Define the size of the buffer (number of elements)
+            int bufferSize = 4; // We are only interested in the first four values
+
+            // Allocate the buffer with the given size and format
+            var buffer = new GraphicsBuffer(GraphicsBuffer.Target.Structured, bufferSize, sizeof(float));
+
+            // Initialize the buffer with zeros
+            float[] initialData = new float[bufferSize];
+            buffer.SetData(initialData);
+
+            // Ensure the data is set to 0.0f
+            for (int i = 0; i < bufferSize; i++)
+            {
+                Assert.IsTrue(initialData[i] == 0.0f);
+            }
+
+            m_RenderGraphTestPipeline.recordRenderGraphBody = (context, camera, cmd) =>
+            {
+                using (var builder = m_RenderGraph.AddComputePass<TestBuffersImport>("TestPass0", out var passData))
+                {
+                    builder.AllowPassCulling(false);
+
+                    passData.bufferHandle = m_RenderGraph.ImportBuffer(buffer);
+
+                    builder.UseBuffer(passData.bufferHandle, AccessFlags.Write);
+
+                    passData.computeShader = computeShader;
+
+                    builder.SetRenderFunc((TestBuffersImport data, ComputeGraphContext ctx) =>
+                    {
+                        int kernel = data.computeShader.FindKernel("CSMain");
+
+                        ctx.cmd.SetComputeBufferParam(data.computeShader, kernel, "resultBuffer", data.bufferHandle);
+                        ctx.cmd.DispatchCompute(data.computeShader, kernel, 1, 1, 1);
+                    });
+                }
+            };
+
+            camera.Render();
+
+            // Read back the data from the buffer
+            float[] result2 = new float[bufferSize];
+            buffer.GetData(result2);
+
+            buffer.Release();
+
+            // Ensure the data has been updated
+            for (int i = 0; i < bufferSize; i++)
+            {
+                Assert.IsTrue(result2[i] == 1.0f);
+            }
         }
     }
 }

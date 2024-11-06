@@ -476,13 +476,13 @@ namespace UnityEngine.Rendering
                 if (skyOcclusionJob is DefaultSkyOcclusion defaultSOJob)
                     defaultSOJob.jobs = jobs;
 
-                lightingJob = lightingOverride ?? new DefaultLightTransport();
-                lightingJob.Initialize(ProbeVolumeLightingTab.GetLightingSettings().mixedBakeMode != MixedLightingMode.IndirectOnly, sortedPositions);
-                if (lightingJob is DefaultLightTransport defaultLightingJob)
-                    defaultLightingJob.jobs = jobs;
-
                 layerMaskJob = renderingLayerOverride ?? new DefaultRenderingLayer();
                 layerMaskJob.Initialize(bakingSet, sortedPositions.GetSubArray(0, probeCount));
+
+                lightingJob = lightingOverride ?? new DefaultLightTransport();
+                lightingJob.Initialize(ProbeVolumeLightingTab.GetLightingSettings().mixedBakeMode != MixedLightingMode.IndirectOnly, sortedPositions, layerMaskJob.renderingLayerMasks);
+                if (lightingJob is DefaultLightTransport defaultLightingJob)
+                    defaultLightingJob.jobs = jobs;
 
                 cellIndex = 0;
 
@@ -910,18 +910,23 @@ namespace UnityEngine.Rendering
                     return false;
 
                 s_AdjustmentVolumes = GetAdjustementVolumes();
-
                 requests = AdditionalGIBakeRequestsManager.GetProbeNormalizationRequests();
 
+                bool canceledByUser = false;
                 // Note: this could be executed in the baking delegate to be non blocking
                 using (new BakingSetupProfiling(BakingSetupProfiling.Stages.PlaceProbes))
-                    positions = RunPlacement();
+                    positions = RunPlacement(ref canceledByUser);
 
-                if (positions.Length == 0)
+                if (positions.Length == 0 || canceledByUser)
                 {
                     positions.Dispose();
+
                     Clear();
                     CleanBakeData();
+
+                    if (canceledByUser)
+                        Lightmapping.Cancel();
+
                     return false;
                 }
             }
@@ -1222,17 +1227,21 @@ namespace UnityEngine.Rendering
             }
         }
 
-        static void FixSeams(NativeArray<int> positionRemap, NativeArray<Vector3> positions, NativeArray<SphericalHarmonicsL2> sh, NativeArray<float> validity)
+        static void FixSeams(NativeArray<int> positionRemap, NativeArray<Vector3> positions, NativeArray<SphericalHarmonicsL2> sh, NativeArray<float> validity, NativeArray<uint> renderingLayerMasks)
         {
             // Seams are caused are caused by probes on the boundary between two subdivision levels
             // The idea is to find first them and do a kind of dilation to smooth the values on the boundary
             // the dilation process consits in doing a trilinear sample of the higher subdivision brick and override the lower subdiv with that
             // We have to mark the probes on the boundary as valid otherwise leak reduction at runtime will interfere with this method
-            // This isn't perfect and also doesn't work on cell boundary, but could easily be fix if it's an issue
 
-
+            
             // Use an indirection structure to ensure mem usage stays reasonable
             VoxelToBrickCache cache = new VoxelToBrickCache();
+
+            // Create a map from cell position to index for fast lookup across cells
+            var cellPositionToIndex = new Dictionary<Vector3Int, int>();
+            for (int i = 0; i < m_BakingBatch.cells.Count; i++)
+                cellPositionToIndex[m_BakingBatch.cells[i].position] = i;
 
             for (int c = 0; c < m_BakingBatch.cells.Count; c++)
             {
@@ -1260,7 +1269,32 @@ namespace UnityEngine.Rendering
                         Vector3Int voxel = Vector3Int.FloorToInt((pos - sampleOffset) / minBrickSize);
                         int hashCode = m_BakingBatch.GetBrickPositionHash(voxel);
                         if (!voxelToBrick.TryGetValue(hashCode, out var brick))
-                            continue;
+                        {
+                            // If the brick was not found in the current cell, find it in the neighbouring cells
+                            Vector3Int GetCellPositionFromVoxel(Vector3Int voxelToLookup, int cellSizeInBricks)
+                            {
+                                return new Vector3Int(
+                                    FloorDivide(voxelToLookup.x, cellSizeInBricks),
+                                    FloorDivide(voxelToLookup.y, cellSizeInBricks),
+                                    FloorDivide(voxelToLookup.z, cellSizeInBricks)
+                                );
+                                int FloorDivide(int a, int b) => a >= 0 ? a / b : (a - b + 1) / b;
+                            }
+
+                            // Find the position of the neighbouring cell that would contain the voxel
+                            bool foundInOtherCell = false;
+                            var cellToLookupPos = GetCellPositionFromVoxel(voxel, m_ProfileInfo.cellSizeInBricks);
+                            if(cellPositionToIndex.TryGetValue(cellToLookupPos, out var cellIndex))
+                            {
+                                var currentCell = m_BakingBatch.cells[cellIndex];
+                                var voxelToBrickNeighbouringCell = cache.GetMap(currentCell);
+                                if (voxelToBrickNeighbouringCell.TryGetValue(hashCode, out brick))
+                                    foundInOtherCell = true;
+                            }
+
+                            if(!foundInOtherCell)
+                                continue;
+                        }
 
                         if (brick.subdivisionLevel > maxSubdiv)
                             largestBrick = brick;
@@ -1285,6 +1319,12 @@ namespace UnityEngine.Rendering
                     int brick_size = ProbeReferenceVolume.CellSize(largestBrick.subdivisionLevel);
                     Vector3Int brickOffset = largestBrick.position * ProbeBrickPool.kBrickCellCount;
 
+                    // We need to check if rendering layers masks were baked, since it happens in separate job
+                    bool bakedRenderingLayerMasks = (renderingLayerMasks.IsCreated & renderingLayerMasks.Length > 0);
+                    uint probeRenderingLayerMask = 0;
+
+                    if (bakedRenderingLayerMasks) probeRenderingLayerMask = renderingLayerMasks[i];
+
                     float weightSum = 0.0f;
                     SphericalHarmonicsL2 trilinear = default;
                     for (int o = 0; o < 8; o++)
@@ -1300,6 +1340,13 @@ namespace UnityEngine.Rendering
                         {
                             bool valid = validity[positionRemap[index]] <= k_MinValidityForLeaking;
                             if (!valid) continue;
+
+                            if (bakedRenderingLayerMasks)
+                            {
+                                uint renderingLayerMask = renderingLayerMasks[positionRemap[index]];
+                                bool commonRenderingLayer = (renderingLayerMask & probeRenderingLayerMask) != 0;
+                                if (!commonRenderingLayer) continue; // We do not use this probe contribution if it does not share at least a common rendering layer
+                            }
 
                             // Do the lerp in compressed format to match result on GPU
                             var sample = sh[positionRemap[index]];
