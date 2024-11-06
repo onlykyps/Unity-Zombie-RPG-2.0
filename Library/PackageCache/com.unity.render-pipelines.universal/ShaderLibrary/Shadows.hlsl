@@ -106,7 +106,26 @@ CBUFFER_END
     #endif
 #endif
 
-float4 _ShadowBias; // x: depth bias, y: normal bias
+// x: depth bias,
+// y: normal bias,
+// z: light type (Spot = 0, Directional = 1, Point = 2, Area/Rectangle = 3, Disc = 4, Pyramid = 5, Box = 6, Tube = 7)
+// w: unused
+float4 _ShadowBias;
+
+half IsSpotLight()
+{
+    return round(_ShadowBias.z) == 0.0 ? 1 : 0;
+}
+
+half IsDirectionalLight()
+{
+    return round(_ShadowBias.z) == 1.0 ? 1 : 0;
+}
+
+half IsPointLight()
+{
+    return round(_ShadowBias.z) == 2.0 ? 1 : 0;
+}
 
 #define BEYOND_SHADOW_FAR(shadowCoord) shadowCoord.z <= 0.0 || shadowCoord.z >= 1.0
 
@@ -484,6 +503,24 @@ float3 ApplyShadowBias(float3 positionWS, float3 normalWS, float3 lightDirection
     positionWS = lightDirection * _ShadowBias.xxx + positionWS;
     positionWS = normalWS * scale.xxx + positionWS;
     return positionWS;
+}
+
+float4 ApplyShadowClamping(float4 positionCS)
+{
+    #if UNITY_REVERSED_Z
+        float clamped = min(positionCS.z, positionCS.w * UNITY_NEAR_CLIP_VALUE);
+    #else
+        float clamped = max(positionCS.z, positionCS.w * UNITY_NEAR_CLIP_VALUE);
+    #endif
+
+    // The current implementation of vertex clamping in Universal RP is the same as in Unity Built-In RP.
+    // We follow the same convention in Universal RP where it's only enabled for Directional Lights
+    // (see: Shadows.cpp::RenderShadowMaps() #L2161-L2162)
+    // (see: Shadows.cpp::RenderShadowMaps() #L2086-L2102)
+    // (see: Shadows.cpp::PrepareStateForShadowMap() #L1685-L1686)
+    positionCS.z = lerp(positionCS.z, clamped, IsDirectionalLight());
+
+    return positionCS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

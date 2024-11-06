@@ -56,6 +56,14 @@ namespace UnityEditor.ShaderGraph
             // add the right click context menu
             IManipulator contextMenuManipulator = new ContextualMenuManipulator(AddContextMenuOptions);
             this.AddManipulator(contextMenuManipulator);
+
+            if (property != null)
+            {
+                property.onAfterVersionChange += () =>
+                {
+                    m_TriggerInspectorUpdate?.Invoke();
+                };
+            }
         }
 
         // Updating the text label of the output slot
@@ -279,7 +287,7 @@ namespace UnityEditor.ShaderGraph
         public void OnModified(ModificationScope scope)
         {
             //disconnected property nodes are always active
-            if (!node.IsSlotConnected(PropertyNode.OutputSlotId))
+            if (!node.IsSlotConnected(PropertyNode.OutputSlotId) && node.activeState is AbstractMaterialNode.ActiveState.Implicit)
                 node.SetActive(true);
 
             SetActive(node.isActive);

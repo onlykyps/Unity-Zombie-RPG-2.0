@@ -43,7 +43,7 @@ namespace UnityEngine.Rendering.Universal
         {
             renderPassEvent = RenderPassEvent.AfterRenderingPrePasses + 1;
 
-            var scriptableRenderPassInput = ScriptableRenderPassInput.Normal;
+            var scriptableRenderPassInput = ScriptableRenderPassInput.Depth | ScriptableRenderPassInput.Normal;
             ConfigureInput(scriptableRenderPassInput);
 
             m_DrawSystem = drawSystem;
@@ -89,7 +89,7 @@ namespace UnityEngine.Rendering.Universal
             {
                 var desc = cameraData.cameraTargetDescriptor;
                 desc.graphicsFormat = QualitySettings.activeColorSpace == ColorSpace.Linear ? GraphicsFormat.R8G8B8A8_SRGB : GraphicsFormat.R8G8B8A8_UNorm;
-                desc.depthBufferBits = 0;
+                desc.depthStencilFormat = GraphicsFormat.None;
                 desc.msaaSamples = 1;
 
                 RenderingUtils.ReAllocateHandleIfNeeded(ref dBufferColorHandles[0], desc, name: s_DBufferNames[0]);
@@ -99,7 +99,7 @@ namespace UnityEngine.Rendering.Universal
             {
                 var desc = cameraData.cameraTargetDescriptor;
                 desc.graphicsFormat = GraphicsFormat.R8G8B8A8_UNorm;
-                desc.depthBufferBits = 0;
+                desc.depthStencilFormat = GraphicsFormat.None;
                 desc.msaaSamples = 1;
 
                 RenderingUtils.ReAllocateHandleIfNeeded(ref dBufferColorHandles[1], desc, name: s_DBufferNames[1]);
@@ -109,7 +109,7 @@ namespace UnityEngine.Rendering.Universal
             {
                 var desc = cameraData.cameraTargetDescriptor;
                 desc.graphicsFormat = GraphicsFormat.R8G8B8A8_UNorm;
-                desc.depthBufferBits = 0;
+                desc.depthStencilFormat = GraphicsFormat.None;
                 desc.msaaSamples = 1;
 
                 RenderingUtils.ReAllocateHandleIfNeeded(ref dBufferColorHandles[2], desc, name: s_DBufferNames[2]);
@@ -230,13 +230,10 @@ namespace UnityEngine.Rendering.Universal
             UniversalCameraData cameraData = frameData.Get<UniversalCameraData>();
             UniversalLightData lightData = frameData.Get<UniversalLightData>();
 
-            UniversalRenderer renderer = (UniversalRenderer)cameraData.renderer;
-
             TextureHandle cameraDepthTexture = resourceData.cameraDepthTexture;
             TextureHandle cameraNormalsTexture = resourceData.cameraNormalsTexture;
 
-            TextureHandle depthTarget = renderer.renderingModeActual == RenderingMode.Deferred ? resourceData.activeDepthTexture :
-                (cameraData.cameraTargetDescriptor.msaaSamples > 1 ? resourceData.dBufferDepth : resourceData.activeDepthTexture);
+            TextureHandle depthTarget = resourceData.dBufferDepth.IsValid() ? resourceData.dBufferDepth : resourceData.activeDepthTexture;
 
             using (var builder = renderGraph.AddRasterRenderPass<PassData>(passName, out var passData, profilingSampler))
             {
@@ -249,7 +246,7 @@ namespace UnityEngine.Rendering.Universal
                 {
                     var desc = cameraData.cameraTargetDescriptor;
                     desc.graphicsFormat = QualitySettings.activeColorSpace == ColorSpace.Linear ? GraphicsFormat.R8G8B8A8_SRGB : GraphicsFormat.R8G8B8A8_UNorm;
-                    desc.depthBufferBits = 0;
+                    desc.depthStencilFormat = GraphicsFormat.None;
                     desc.msaaSamples = 1;
                     dbufferHandles[0] = UniversalRenderer.CreateRenderGraphTexture(renderGraph, desc, s_DBufferNames[0], true, new Color(0, 0, 0, 1));
                     builder.SetRenderAttachment(dbufferHandles[0], 0, AccessFlags.Write);
@@ -259,7 +256,7 @@ namespace UnityEngine.Rendering.Universal
                 {
                     var desc = cameraData.cameraTargetDescriptor;
                     desc.graphicsFormat = GraphicsFormat.R8G8B8A8_UNorm;
-                    desc.depthBufferBits = 0;
+                    desc.depthStencilFormat = GraphicsFormat.None;
                     desc.msaaSamples = 1;
                     dbufferHandles[1] = UniversalRenderer.CreateRenderGraphTexture(renderGraph, desc, s_DBufferNames[1], true, new Color(0.5f, 0.5f, 0.5f, 1));
                     builder.SetRenderAttachment(dbufferHandles[1], 1, AccessFlags.Write);
@@ -269,20 +266,20 @@ namespace UnityEngine.Rendering.Universal
                 {
                     var desc = cameraData.cameraTargetDescriptor;
                     desc.graphicsFormat = GraphicsFormat.R8G8B8A8_UNorm;
-                    desc.depthBufferBits = 0;
+                    desc.depthStencilFormat = GraphicsFormat.None;
                     desc.msaaSamples = 1;
                     dbufferHandles[2] = UniversalRenderer.CreateRenderGraphTexture(renderGraph, desc, s_DBufferNames[2], true, new Color(0, 0, 0, 1));
                     builder.SetRenderAttachment(dbufferHandles[2], 2, AccessFlags.Write);
                 }
 
-                builder.SetRenderAttachmentDepth(depthTarget, AccessFlags.Write);
-                if (cameraData.cameraTargetDescriptor.msaaSamples > 1)
-                    builder.SetGlobalTextureAfterPass(depthTarget, Shader.PropertyToID("_CameraDepthTexture"));
+                builder.SetRenderAttachmentDepth(depthTarget, AccessFlags.Read);
 
                 if (cameraDepthTexture.IsValid())
                     builder.UseTexture(cameraDepthTexture, AccessFlags.Read);
                 if (cameraNormalsTexture.IsValid())
                     builder.UseTexture(cameraNormalsTexture, AccessFlags.Read);
+                if (passData.decalLayers)
+                    builder.UseTexture(resourceData.renderingLayersTexture, AccessFlags.Read);
 
                 if (resourceData.ssaoTexture.IsValid())
                     builder.UseGlobalTexture(s_SSAOTextureID);

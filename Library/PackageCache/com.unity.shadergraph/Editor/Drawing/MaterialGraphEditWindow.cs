@@ -78,6 +78,7 @@ namespace UnityEditor.ShaderGraph.Drawing
             {
                 if (m_GraphEditorView != null)
                 {
+                    m_GraphEditorView.UnregisterCallback<GeometryChangedEvent>(OnGeometryChanged);
                     m_GraphEditorView.RemoveFromHierarchy();
                     m_GraphEditorView.Dispose();
                 }
@@ -123,6 +124,9 @@ namespace UnityEditor.ShaderGraph.Drawing
         {
             get { return titleContent.text; }
         }
+
+        [field: NonSerialized]
+        internal bool isVisible { get; private set; }
 
         bool AssetFileExists()
         {
@@ -372,6 +376,11 @@ namespace UnityEditor.ShaderGraph.Drawing
                 graphEditorView.HandleGraphChanges(wasUndoRedoPerformed);
                 graphObject.graph.ClearChanges();
 
+                if (wasUndoRedoPerformed)
+                {
+                    graphEditorView.inspectorView.RefreshInspectables();
+                }
+
                 if (updateTitle)
                     UpdateTitle();
             }
@@ -414,12 +423,8 @@ namespace UnityEditor.ShaderGraph.Drawing
 
         void OnDisable()
         {
-            m_GraphEditorView?.UnregisterCallback<GeometryChangedEvent>(OnGeometryChanged);
-            m_GraphEditorView?.Dispose();
             messageManager.ClearAll();
 
-            m_GraphEditorView = null;
-            m_GraphObject = null;
             m_MessageManager = null;
             m_RenderPipelineAsset = null;
 
@@ -1341,6 +1346,16 @@ namespace UnityEditor.ShaderGraph.Drawing
             if (m_FrameAllAfterLayout)
                 graphEditorView.graphView.FrameAll();
             m_FrameAllAfterLayout = false;
+        }
+
+        private void OnBecameVisible()
+        {
+            isVisible = true;
+        }
+
+        private void OnBecameInvisible()
+        {
+            isVisible = false;
         }
     }
 }

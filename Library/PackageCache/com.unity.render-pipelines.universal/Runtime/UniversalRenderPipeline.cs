@@ -163,7 +163,7 @@ namespace UnityEngine.Rendering.Universal
         private UniversalRenderPipelineGlobalSettings m_GlobalSettings;
 
         internal UniversalRenderPipelineRuntimeTextures runtimeTextures { get; private set; }
-        
+
         /// <summary>
         /// The default Render Pipeline Global Settings.
         /// </summary>
@@ -180,6 +180,13 @@ namespace UnityEngine.Rendering.Universal
 
         // Store locally the value on the instance due as the Render Pipeline Asset data might change before the disposal of the asset, making some APV Resources leak.
         internal bool apvIsEnabled = false;
+
+        // In some specific cases, we modify Screen.msaaSamples to reduce GPU bandwidth
+        internal static bool canOptimizeScreenMSAASamples { get; private set; }
+
+        // For iOS and macOS players, the Screen API MSAA samples change request is only applied in the next frame (UUM-42825)
+        // To adress this, we need to store here the MSAA sample count at the beginning of the frame
+        internal static int startFrameScreenMSAASamples { get; private set; }
 
         // Reference to the asset associated with the pipeline.
         // When a pipeline asset is switched in `GraphicsSettings`, the `UniversalRenderPipelineCore.asset` member
@@ -418,6 +425,9 @@ namespace UnityEngine.Rendering.Universal
 #endif
             // For XR, HDR and no camera cases, UI Overlay ownership must be enforced
             AdjustUIOverlayOwnership(cameraCount);
+            
+            // Bandwidth optimization with Render Graph in some circumstances
+            SetupScreenMSAASamplesState(cameraCount);
 
             GPUResidentDrawer.ReinitializeIfNeeded();
 
@@ -439,7 +449,6 @@ namespace UnityEngine.Rendering.Universal
                 // This is for texture streaming
                 UniversalRenderPipelineDebugDisplaySettings.Instance.UpdateMaterials();
 #endif
-
                 // URP uses the camera's allowDynamicResolution flag to decide if useDynamicScale should be enabled for camera render targets.
                 // However, the RTHandle system has an additional setting that controls if useDynamicScale will be set for render targets allocated via RTHandles.
                 // In order to avoid issues at runtime, we must make the RTHandle system setting consistent with URP's logic. URP already synchronizes the setting
@@ -661,6 +670,12 @@ namespace UnityEngine.Rendering.Universal
             if (additionalCameraData != null && additionalCameraData.renderType != CameraRenderType.Base)
             {
                 Debug.LogWarning("Only Base cameras can be rendered with standalone RenderSingleCamera. Camera will be skipped.");
+                return;
+            }
+
+            if (camera.targetTexture.width == 0 || camera.targetTexture.height == 0 || camera.pixelWidth == 0 || camera.pixelHeight == 0)
+            {
+                Debug.LogWarning($"Camera '{camera.name}' has an invalid render target size (width: {camera.targetTexture.width}, height: {camera.targetTexture.height}) or pixel dimensions (width: {camera.pixelWidth}, height: {camera.pixelHeight}). Camera will be skipped.");
                 return;
             }
 
@@ -1227,8 +1242,7 @@ namespace UnityEngine.Rendering.Universal
             if (!cameraData.postProcessEnabled)
                 return false;
 
-            if ((cameraData.antialiasing == AntialiasingMode.SubpixelMorphologicalAntiAliasing || cameraData.IsTemporalAAEnabled())
-                && cameraData.renderType == CameraRenderType.Base)
+            if (cameraData.IsTemporalAAEnabled() && (cameraData.renderType == CameraRenderType.Base))
                 return true;
 
             return CheckPostProcessForDepth();
@@ -1572,7 +1586,7 @@ namespace UnityEngine.Rendering.Universal
 
             UniversalRenderingData data = frameData.Get<UniversalRenderingData>();
             data.supportsDynamicBatching = settings.supportsDynamicBatching;
-            data.perObjectData = GetPerObjectLightFlags(universalLightData.additionalLightsCount, isForwardPlus);
+            data.perObjectData = GetPerObjectLightFlags(universalLightData.additionalLightsCount, isForwardPlus, settings.reflectionProbeBlending);
 
             // Render graph does not support RenderingData.commandBuffer as its execution timeline might break.
             // RenderingData.commandBuffer is available only for the old non-RG execute code path.
@@ -1907,7 +1921,7 @@ namespace UnityEngine.Rendering.Universal
 #endif
         }
 
-        static PerObjectData GetPerObjectLightFlags(int additionalLightsCount, bool isForwardPlus)
+        static PerObjectData GetPerObjectLightFlags(int additionalLightsCount, bool isForwardPlus, bool reflectionProbeBlending)
         {
             using var profScope = new ProfilingScope(Profiling.Pipeline.getPerObjectLightFlags);
 
@@ -1916,6 +1930,10 @@ namespace UnityEngine.Rendering.Universal
             if (!isForwardPlus)
             {
                 configuration |= PerObjectData.ReflectionProbes | PerObjectData.LightData;
+            }
+            else if (!reflectionProbeBlending)
+            {
+                configuration |= PerObjectData.ReflectionProbes;
             }
 
             if (additionalLightsCount > 0 && !isForwardPlus)
@@ -2378,6 +2396,14 @@ namespace UnityEngine.Rendering.Universal
                 // by setting rendersUIOverlay (public API) to false in a callback added to RenderPipelineManager.beginContextRendering
                 SupportedRenderingFeatures.active.rendersUIOverlay = true;
             }
+        }
+
+        private static void SetupScreenMSAASamplesState(int cameraCount)
+        {
+            // Enable potential bandwidth optimization only when rendering a single base camera
+            canOptimizeScreenMSAASamples = (cameraCount == 1);
+            // Save ScreenMSAASamples value at beginning of the frame, useful for iOS/macOS
+            startFrameScreenMSAASamples = Screen.msaaSamples;
         }
     }
 }

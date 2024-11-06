@@ -1262,9 +1262,6 @@ namespace UnityEngine.Rendering.Universal
         /// <summary> Keyword used for high quality Bloom dirt. </summary>
         public const string BloomHQDirt = "_BLOOM_HQ_DIRT";
 
-        /// <summary> Keyword used for RGBM format for Bloom. </summary>
-        public const string UseRGBM = "_USE_RGBM";
-
         /// <summary> Keyword used for Distortion. </summary>
         public const string Distortion = "_DISTORTION";
 
@@ -1273,6 +1270,9 @@ namespace UnityEngine.Rendering.Universal
 
         /// <summary> Keyword used for HDR Color Grading. </summary>
         public const string HDRGrading = "_HDR_GRADING";
+
+        /// <summary> Keyword used for HDR UI Overlay compositing. </summary>
+        public const string HDROverlay = "_HDR_OVERLAY";
 
         /// <summary> Keyword used for ACES Tonemapping. </summary>
         public const string TonemapACES = "_TONEMAP_ACES";
@@ -1534,7 +1534,7 @@ namespace UnityEngine.Rendering.Universal
             {
                 desc = new RenderTextureDescriptor(cameraData.scaledWidth, cameraData.scaledHeight);
                 desc.graphicsFormat = MakeRenderTextureGraphicsFormat(isHdrEnabled, requestHDRColorBufferPrecision, needsAlpha);
-                desc.depthBufferBits = 32;
+                desc.depthStencilFormat = SystemInfo.GetGraphicsFormat(DefaultFormat.DepthStencil);
                 desc.msaaSamples = msaaSamples;
                 desc.sRGB = (QualitySettings.activeColorSpace == ColorSpace.Linear);
             }
@@ -2001,5 +2001,7 @@ namespace UnityEngine.Rendering.Universal
 
             return mode;
         }
+
+        internal static bool isRunningOnPowerVRGPU = SystemInfo.graphicsDeviceName.Contains("PowerVR");
     }
 }

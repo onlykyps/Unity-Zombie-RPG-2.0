@@ -48,6 +48,8 @@ void InitializeInputData(GrassVertexOutput input, out InputData inputData)
 
     inputData.positionWS = input.posWSShininess.xyz;
 
+    inputData.positionCS = input.clipPos;
+
     half3 viewDirWS = input.viewDir;
     viewDirWS = SafeNormalize(viewDirWS);
 
@@ -99,6 +101,9 @@ void InitializeInputData(GrassVertexOutput input, out InputData inputData)
     inputData.staticLightmapUV = input.lightmapUV;
     #else
     inputData.vertexSH = input.vertexSH;
+    #endif
+    #if defined(USE_APV_PROBE_OCCLUSION)
+    inputData.probeOcclusion = input.probeOcclusion;
     #endif
     #endif
 }

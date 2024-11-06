@@ -8,10 +8,8 @@ namespace UnityEngine.Rendering.Universal
     {
         #if UNITY_SWITCH || UNITY_EMBEDDED_LINUX || UNITY_QNX
         const GraphicsFormat k_DepthStencilFormat = GraphicsFormat.D24_UNorm_S8_UInt;
-        internal const int k_DepthBufferBits = 24;
         #else
         const GraphicsFormat k_DepthStencilFormat = GraphicsFormat.D32_SFloat_S8_UInt;
-        internal const int k_DepthBufferBits = 32;
         #endif
 
         const int k_FinalBlitPassQueueOffset = 1;
@@ -40,6 +38,7 @@ namespace UnityEngine.Rendering.Universal
         internal RTHandle m_DepthTextureHandle;
 
 #if UNITY_EDITOR
+        SetEditorTargetPass m_SetEditorTargetPass;
         internal RTHandle m_DefaultWhiteTextureHandle;
 #endif
 
@@ -95,6 +94,10 @@ namespace UnityEngine.Rendering.Universal
             m_DrawOffscreenUIPass = new DrawScreenSpaceUIPass(RenderPassEvent.BeforeRenderingPostProcessing, true);
             m_DrawOverlayUIPass = new DrawScreenSpaceUIPass(RenderPassEvent.AfterRendering + k_AfterFinalBlitPassQueueOffset, false); // after m_FinalBlitPass
 
+#if UNITY_EDITOR
+            m_SetEditorTargetPass = new SetEditorTargetPass(RenderPassEvent.AfterRendering + 9);
+#endif
+
             // RenderTexture format depends on camera and pipeline (HDR, non HDR, etc)
             // Samples (MSAA) depend on camera and pipeline
             m_ColorBufferSystem = new RenderTargetBufferSystem("_CameraColorAttachment");
@@ -134,7 +137,7 @@ namespace UnityEngine.Rendering.Universal
             CoreUtils.Destroy(m_BlitMaterial);
             CoreUtils.Destroy(m_BlitHDRMaterial);
             CoreUtils.Destroy(m_SamplingMaterial);
-            
+
             CleanupRenderGraphResources();
 
             base.Dispose(disposing);
@@ -198,7 +201,7 @@ namespace UnityEngine.Rendering.Universal
             ref var cameraTargetDescriptor = ref cameraData.cameraTargetDescriptor;
 
             var colorDescriptor = cameraTargetDescriptor;
-            colorDescriptor.depthBufferBits = (int)DepthBits.None;
+            colorDescriptor.depthStencilFormat = GraphicsFormat.None;
             m_ColorBufferSystem.SetCameraSettings(colorDescriptor, colorTextureFilterMode);
 
             if (cameraData.renderType == CameraRenderType.Base)
@@ -227,7 +230,7 @@ namespace UnityEngine.Rendering.Universal
                 {
                     var depthDescriptor = cameraTargetDescriptor;
                     depthDescriptor.colorFormat = RenderTextureFormat.Depth;
-                    depthDescriptor.depthBufferBits = k_DepthBufferBits;
+                    depthDescriptor.depthStencilFormat = k_DepthStencilFormat; 
                     if (!cameraData.resolveFinalTarget && m_UseDepthStencilBuffer)
                         depthDescriptor.bindMS = depthDescriptor.msaaSamples > 1 && !SystemInfo.supportsMultisampleAutoResolve && (SystemInfo.supportsMultisampledTextures != 0);
                     RenderingUtils.ReAllocateHandleIfNeeded(ref m_DepthTextureHandle, depthDescriptor, FilterMode.Point, wrapMode: TextureWrapMode.Clamp, name: "_CameraDepthAttachment");
@@ -404,7 +407,7 @@ namespace UnityEngine.Rendering.Universal
 
             if (hasPostProcess)
             {
-                var desc = PostProcessPass.GetCompatibleDescriptor(cameraTargetDescriptor, cameraTargetDescriptor.width, cameraTargetDescriptor.height, cameraTargetDescriptor.graphicsFormat, DepthBits.None);
+                var desc = PostProcessPass.GetCompatibleDescriptor(cameraTargetDescriptor, cameraTargetDescriptor.width, cameraTargetDescriptor.height, cameraTargetDescriptor.graphicsFormat);
                 RenderingUtils.ReAllocateHandleIfNeeded(ref m_PostProcessPasses.m_AfterPostProcessColor, desc, FilterMode.Point, TextureWrapMode.Clamp, name: "_AfterPostProcessTexture");
 
                 postProcessPass.Setup(
@@ -453,6 +456,18 @@ namespace UnityEngine.Rendering.Universal
             {
                 EnqueuePass(m_DrawOverlayUIPass);
             }
+
+            // The editor scene view still relies on some builtin passes (i.e. drawing the scene grid). The builtin
+            // passes are not explicitly setting RTs and rely on the last active render target being set.
+            // TODO: this will go away once we remove the builtin dependencies and implement the grid in SRP.
+#if UNITY_EDITOR
+            bool isSceneViewOrPreviewCamera = cameraData.isSceneViewCamera || cameraData.isPreviewCamera;
+            bool isGizmosEnabled = UnityEditor.Handles.ShouldRenderGizmos();
+            if (isSceneViewOrPreviewCamera || (isGizmosEnabled && lastCameraInStack))
+            {
+                EnqueuePass(m_SetEditorTargetPass);
+            }
+#endif
         }
 
         public override void SetupCullingParameters(ref ScriptableCullingParameters cullingParameters, ref CameraData cameraData)
@@ -510,9 +525,24 @@ namespace UnityEngine.Rendering.Universal
             get => !IsGLDevice();
         }
 
-        internal override bool supportsNativeRenderPassRendergraphCompiler
+        internal override bool supportsNativeRenderPassRendergraphCompiler => true;
+    }
+
+#if UNITY_EDITOR
+    internal class SetEditorTargetPass : ScriptableRenderPass
+    {
+        public SetEditorTargetPass(RenderPassEvent evt)
         {
-            get => !IsGLDevice(); // GLES and doesn't support MSAA resolve with the NRP API
+            renderPassEvent = evt;
+        }
+
+        [Obsolete(DeprecationMessage.CompatibilityScriptingAPIObsolete, false)]
+        public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
+        {
+            renderingData.commandBuffer.SetRenderTarget(k_CameraTarget,
+                       RenderBufferLoadAction.Load, RenderBufferStoreAction.Store, // color
+                       RenderBufferLoadAction.Load, RenderBufferStoreAction.DontCare); // depth
         }
     }
+#endif
 }
