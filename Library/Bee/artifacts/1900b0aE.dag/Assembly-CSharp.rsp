@@ -468,7 +468,9 @@
 "Assets/Environment/PostProcessing/Runtime/Utils/MaterialFactory.cs"
 "Assets/Environment/PostProcessing/Runtime/Utils/RenderTextureFactory.cs"
 "Assets/Environment/PostProcessing/Utilities/CustomMotionTexture/ExampleWheelController.cs"
+"Assets/Scripts/CameraController.cs"
 "Assets/Scripts/PlayerController.cs"
+"Assets/Scripts/PlayerMotor.cs"
 "Assets/TutorialInfo/Scripts/Readme.cs"
 -langversion:9.0
 /deterministic
