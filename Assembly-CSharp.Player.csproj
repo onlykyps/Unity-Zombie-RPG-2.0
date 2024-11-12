@@ -67,6 +67,7 @@
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Components\VignetteComponent.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Models\EyeAdaptationModel.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Models\ScreenSpaceReflectionModel.cs" />
+    <Compile Include="Assets\Scripts\Interactable.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Models\BuiltinDebugViewsModel.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Components\AmbientOcclusionComponent.cs" />

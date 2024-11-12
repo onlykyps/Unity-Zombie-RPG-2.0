@@ -18,20 +18,20 @@ public class CameraController : MonoBehaviour
 
    // Start is called once before the first execution of Update after the MonoBehaviour is created
    void Start()
-    {
-        
-    }
+   {
 
-    // Update is called once per frame
-    void Update()
-    {
+   }
+
+   // Update is called once per frame
+   void Update()
+   {
       currentZoom -= Input.GetAxis("MouseScrollWheel") * zoomSpeed;
 
       currentZoom = Mathf.Clamp(currentZoom, minZoom, maxZoom);
 
       currentYaw -= Input.GetAxis("Horizontal") * yawSpeed * Time.deltaTime;
-    }
-   
+   }
+
    private void LateUpdate()
    {
       transform.position = target.position - offset * currentZoom;
