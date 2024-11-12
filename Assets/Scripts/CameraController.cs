@@ -13,6 +13,8 @@ public class CameraController : MonoBehaviour
    public float minZoom = 5f;
    public float maxZoom = 15f;
 
+   public float yawSpeed = 100f;
+   private float currentYaw = 0f;
 
    // Start is called once before the first execution of Update after the MonoBehaviour is created
    void Start()
@@ -26,12 +28,15 @@ public class CameraController : MonoBehaviour
       currentZoom -= Input.GetAxis("MouseScrollWheel") * zoomSpeed;
 
       currentZoom = Mathf.Clamp(currentZoom, minZoom, maxZoom);
+
+      currentYaw -= Input.GetAxis("Horizontal") * yawSpeed * Time.deltaTime;
     }
    
    private void LateUpdate()
    {
       transform.position = target.position - offset * currentZoom;
       transform.LookAt(target.position + Vector3.up * pitch);
+      transform.RotateAround(target.position, Vector3.up, currentYaw);
    }
 
 }
