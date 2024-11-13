@@ -95,6 +95,7 @@
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Models\ColorGradingModel.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Components\FxaaComponent.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
+    <Compile Include="Assets\Scripts\CharacterAnimator.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\PostProcessingContext.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\PostProcessingComponent.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Components\TaaComponent.cs" />
