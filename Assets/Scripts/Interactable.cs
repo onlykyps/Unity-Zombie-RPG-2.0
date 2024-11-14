@@ -13,6 +13,7 @@ public class Interactable : MonoBehaviour
    public virtual void Interact()
    {
       // this method is meant ot be overwitten
+      Debug.Log("Interacting with " + transform.name);
    }
 
 
@@ -32,6 +33,9 @@ public class Interactable : MonoBehaviour
 
    void OnDrawGizmosSelected()
    {
+      if (interactionTransform == null)
+         interactionTransform = transform;
+
       Gizmos.color = Color.yellow;
       Gizmos.DrawWireSphere(interactionTransform.position, radius);
    }

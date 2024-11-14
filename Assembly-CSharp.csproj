@@ -86,6 +86,8 @@
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Components\BloomComponent.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Utilities\CustomMotionTexture\ExampleWheelController.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Utils\GraphicsUtils.cs" />
+    <Compile Include="Assets\Scripts\Item.cs" />
+    <Compile Include="Assets\Scripts\ItemPickUp.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Models\MotionBlurModel.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\PostProcessingProfile.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Models\GrainModel.cs" />
@@ -104,6 +106,7 @@
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Components\ColorGradingComponent.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Components\DepthOfFieldComponent.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Components\ChromaticAberrationComponent.cs" />
+    <Compile Include="Assets\Scripts\Inventory.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Utils\ColorGradingCurve.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Models\DepthOfFieldModel.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Attributes\GetSetAttribute.cs" />
