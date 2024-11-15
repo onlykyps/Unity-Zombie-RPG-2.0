@@ -8,6 +8,14 @@
     "D:\\Dropbox\\My Games\\CV Games\\Unity - Zombie RPG 2.0\\Packages\\packages-lock.json"
   ],
   "outputs": {
+    "com.unity.2d.sprite@1.0.0": {
+      "name": "com.unity.2d.sprite",
+      "resolvedPath": "D:\\Dropbox\\My Games\\CV Games\\Unity - Zombie RPG 2.0\\Library\\PackageCache\\com.unity.2d.sprite",
+      "fingerprint": "0e70656ef5df5c7161c8cfc6f24ab0dde0dc637e",
+      "editorCompatibility": "2019.2.0a1",
+      "version": "1.0.0",
+      "source": "builtin"
+    },
     "com.unity.ai.navigation@2.0.4": {
       "name": "com.unity.ai.navigation",
       "resolvedPath": "D:\\Dropbox\\My Games\\CV Games\\Unity - Zombie RPG 2.0\\Library\\PackageCache\\com.unity.ai.navigation",
@@ -386,7 +394,10 @@
       "fingerprint": "fb0dc592af8b524f1a06c50d7caf95552f1bcd2f",
       "editorCompatibility": "2020.3.0a1",
       "version": "3.0.3",
-      "source": "registry"
+      "source": "registry",
+      "errors": [
+        "Package has invalid dependencies:\n  com.unity.test-framework.performance.tests: Package [com.unity.test-framework.performance.tests@3.0.3] cannot be found"
+      ]
     }
   }
 }
