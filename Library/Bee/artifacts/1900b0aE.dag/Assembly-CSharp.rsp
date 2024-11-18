@@ -473,6 +473,8 @@
 "Assets/Scripts/CharacterAnimator.cs"
 "Assets/Scripts/Interactable.cs"
 "Assets/Scripts/Inventory.cs"
+"Assets/Scripts/InventorySlot.cs"
+"Assets/Scripts/InventoryUI.cs"
 "Assets/Scripts/Item.cs"
 "Assets/Scripts/ItemPickUp.cs"
 "Assets/Scripts/PlayerController.cs"
