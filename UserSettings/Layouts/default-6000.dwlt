@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1590
     height: 1341
   m_ShowMode: 4
-  m_Title: Game
+  m_Title: Debug
   m_RootView: {fileID: 6}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -48,7 +48,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 43
+  controlID: 106
   draggingID: 0
 --- !u!114 &3
 MonoBehaviour:
@@ -69,8 +69,8 @@ MonoBehaviour:
     y: 0
     width: 378
     height: 1285
-  m_MinSize: {x: 276, y: 76}
-  m_MaxSize: {x: 4001, y: 4026}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 15}
@@ -272,8 +272,8 @@ MonoBehaviour:
     y: 0
     width: 838
     height: 757
-  m_MinSize: {x: 202, y: 226}
-  m_MaxSize: {x: 4002, y: 4026}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 17}
   m_Panes:
   - {fileID: 17}
@@ -472,9 +472,9 @@ MonoBehaviour:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 82ae0000
-    m_LastClickedID: 44674
-    m_ExpandedIDs: 00000000c2ab0000c4ab0000c6ab0000c8ab0000caab0000ccab0000ceab0000d0ab0000d2ab0000d4ab0000d6ab0000d8ab0000daab0000dcab0000deab0000e0ab0000e2ab0000e4ab0000e6ab000094ae000000ca9a3b
+    m_SelectedIDs: 92ae0000
+    m_LastClickedID: 44690
+    m_ExpandedIDs: 00000000dcab0000deab0000e0ab0000e2ab0000e4ab0000e6ab0000e8ab0000eaab0000ecab0000eeab0000f0ab0000f2ab0000f4ab0000f6ab0000f8ab0000faab0000fcab0000feab000000ac000092ae000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -503,7 +503,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000c2ab0000c4ab0000c6ab0000c8ab0000caab0000ccab0000ceab0000d0ab0000d2ab0000d4ab0000d6ab0000d8ab0000daab0000dcab0000deab0000e0ab0000e2ab0000e4ab0000e6ab0000
+    m_ExpandedIDs: 00000000dcab0000deab0000e0ab0000e2ab0000e4ab0000e6ab0000e8ab0000eaab0000ecab0000eeab0000f0ab0000f2ab0000f4ab0000f6ab0000f8ab0000faab0000fcab0000feab000000ac0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -649,9 +649,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: aea80000
-      m_LastClickedID: 43182
-      m_ExpandedIDs: f4faffff
+      m_SelectedIDs: b0a50000
+      m_LastClickedID: 0
+      m_ExpandedIDs: c8f9ffffb2faffffeea80000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
