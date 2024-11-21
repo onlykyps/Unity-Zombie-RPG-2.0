@@ -17,5 +17,6 @@ MonoBehaviour:
   isDefaultItem: 0
   equipSlot: 2
   mesh: {fileID: 5633882701226501996, guid: f1bcf212d6c0e35418962a0f4ec3290e, type: 3}
+  meshRenderer: {fileID: 5315193659346662346, guid: 61b3f6e846911504981710c41c3042fa, type: 3}
   armourModifier: 3
   damageModifier: 0

@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8407ecf196ca92e41a63e46d5c8edde4, type: 3}
   m_Name: Platechest of Destiny
   m_EditorClassIdentifier: 
-  name: Platelegs of Protection
+  name: Platechest of Destiny
   icon: {fileID: 1260517902, guid: 65acac6315f9ee44d9730ae5dba67766, type: 3}
   isDefaultItem: 0
   equipSlot: 1
-  mesh: {fileID: 0}
+  meshRenderer: {fileID: 9011105785994025230, guid: d249f0db6bb1b194bab18a398ede713a, type: 3}
   armourModifier: 0
   damageModifier: 3
