@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8407ecf196ca92e41a63e46d5c8edde4, type: 3}
-  m_Name: Sword of Destiny
+  m_Name: Platelegs of Protection
   m_EditorClassIdentifier: 
-  name: New Item
-  icon: {fileID: 621681392, guid: 42bc1b4946e609b40a046d70815251f0, type: 3}
+  name: Platelegs of Protection
+  icon: {fileID: -520022654, guid: 9fd0a35802abbf840bca417f3cb4c2b8, type: 3}
   isDefaultItem: 0
-  equipSlot: 3
-  armourModifier: 0
-  damageModifier: 3
+  equipSlot: 2
+  mesh: {fileID: 5633882701226501996, guid: f1bcf212d6c0e35418962a0f4ec3290e, type: 3}
+  armourModifier: 3
+  damageModifier: 0

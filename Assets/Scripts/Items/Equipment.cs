@@ -4,7 +4,8 @@ using UnityEngine;
 public class Equipment : Item
 {
    public EquipmentSlot equipSlot;
-   public SkinnedMeshRenderer mesh;
+   public Mesh mesh;
+   public SkinnedMeshRenderer meshRenderer;
 
    public int armourModifier;
    public int damageModifier;
