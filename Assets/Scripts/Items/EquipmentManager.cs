@@ -11,7 +11,12 @@ public class EquipmentManager : MonoBehaviour
    #endregion
 
    Equipment[] currentEquipment;
-   Inventory inventory;
+   SkinnedMeshRenderer[] currentMeshes; // items we currently have equipped
+   public SkinnedMeshRenderer targetMesh;
+
+   Inventory inventory; // reference to our inventory
+
+   // callback for when an item is equipped or unequipped 
    public delegate void OnEquipemntChanged(Equipment newItem, Equipment oldItem);
    public OnEquipemntChanged onEquipemntChanged;
 
@@ -20,34 +25,53 @@ public class EquipmentManager : MonoBehaviour
    {
       inventory = Inventory.instance;
 
-      int numSlots =  System.Enum.GetNames(typeof(EquipmentSlot)).Length;
+      // initialize currentEquipment based on number of equipment slots
+      int numSlots = System.Enum.GetNames(typeof(EquipmentSlot)).Length;
       currentEquipment = new Equipment[numSlots];
+
+      currentMeshes = new SkinnedMeshRenderer[numSlots];
    }
 
+   // equip a new item
    public void Equip(Equipment newItem)
    {
+      // find out what slot the item fits in
       int slotIndex = (int)newItem.equipSlot;
       Equipment oldItem = null;
 
-
-      if(currentEquipment[slotIndex] != null)
+      // if there was already an item in the slot
+      // make sure to puut it back in the inventory
+      if (currentEquipment[slotIndex] != null)
       {
          oldItem = currentEquipment[slotIndex];
          inventory.Add(oldItem);
       }
 
-      if(onEquipemntChanged != null)
+      // insert item in the next slot
+      if (onEquipemntChanged != null)
       {
          onEquipemntChanged.Invoke(newItem, oldItem);
       }
 
       currentEquipment[slotIndex] = newItem;
+      SkinnedMeshRenderer newMesh = Instantiate<SkinnedMeshRenderer>(newItem.meshRenderer);
+      newMesh.transform.parent = newMesh.transform;
+
+      newMesh.bones = targetMesh.bones;
+      newMesh.rootBone = targetMesh.rootBone;
+
+      currentMeshes[slotIndex] = newMesh;
    }
 
+   // unequip an item with particular index
    public void Unequip(int slotIndex)
    {
-      if(currentEquipment[slotIndex]!=null)
+      if (currentEquipment[slotIndex] != null)
       {
+         if (currentMeshes[slotIndex] == null)
+         {
+            Destroy(currentMeshes[slotIndex].gameObject);
+         }
          Equipment oldItem = currentEquipment[slotIndex];
          inventory.Add(oldItem);
 
@@ -72,9 +96,17 @@ public class EquipmentManager : MonoBehaviour
    // Update is called once per frame
    void Update()
    {
-      if(Input.GetKeyDown(KeyCode.U))
+      if (Input.GetKeyDown(KeyCode.U))
       {
          UnequipAll();
+      }
+   }
+
+   void SetEquipmentBlendShapes(Equipment item, int weight)
+   {
+      foreach (EquipemntMeshRegion blendShape in item.coveredMeshRegions)
+      {
+         targetMesh.SetBlendShapeWeight((int)blendShape, weight);
       }
    }
 }
