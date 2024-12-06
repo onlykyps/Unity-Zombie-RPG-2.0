@@ -471,6 +471,7 @@
 "Assets/Environment/PostProcessing/Utilities/CustomMotionTexture/ExampleWheelController.cs"
 "Assets/Scripts/CameraController.cs"
 "Assets/Scripts/CharacterAnimator.cs"
+"Assets/Scripts/Helper/ConvertToRegularMesh.cs"
 "Assets/Scripts/Interactable.cs"
 "Assets/Scripts/Inventory/Inventory.cs"
 "Assets/Scripts/Inventory/InventorySlot.cs"

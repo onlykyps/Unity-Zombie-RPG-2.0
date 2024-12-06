@@ -12,7 +12,9 @@ public class EquipmentManager : MonoBehaviour
 
    Equipment[] currentEquipment;
    SkinnedMeshRenderer[] currentMeshes; // items we currently have equipped
+
    public SkinnedMeshRenderer targetMesh;
+   public Equipment[] defaultItems;
 
    Inventory inventory; // reference to our inventory
 
@@ -30,6 +32,8 @@ public class EquipmentManager : MonoBehaviour
       currentEquipment = new Equipment[numSlots];
 
       currentMeshes = new SkinnedMeshRenderer[numSlots];
+
+      EquipDefaultItems();
    }
 
    // equip a new item
@@ -37,21 +41,24 @@ public class EquipmentManager : MonoBehaviour
    {
       // find out what slot the item fits in
       int slotIndex = (int)newItem.equipSlot;
-      Equipment oldItem = null;
 
-      // if there was already an item in the slot
-      // make sure to puut it back in the inventory
-      if (currentEquipment[slotIndex] != null)
-      {
-         oldItem = currentEquipment[slotIndex];
-         inventory.Add(oldItem);
-      }
+      Equipment oldItem = Unequip(slotIndex);
+
+      //// if there was already an item in the slot
+      //// make sure to puut it back in the inventory
+      //if (currentEquipment[slotIndex] != null)
+      //{
+      //   oldItem = currentEquipment[slotIndex];
+      //   inventory.Add(oldItem);
+      //}
 
       // insert item in the next slot
       if (onEquipemntChanged != null)
       {
          onEquipemntChanged.Invoke(newItem, oldItem);
       }
+
+      SetEquipmentBlendShapes(newItem, 100);
 
       currentEquipment[slotIndex] = newItem;
       SkinnedMeshRenderer newMesh = Instantiate<SkinnedMeshRenderer>(newItem.meshRenderer);
@@ -64,7 +71,7 @@ public class EquipmentManager : MonoBehaviour
    }
 
    // unequip an item with particular index
-   public void Unequip(int slotIndex)
+   public Equipment Unequip(int slotIndex)
    {
       if (currentEquipment[slotIndex] != null)
       {
@@ -73,6 +80,7 @@ public class EquipmentManager : MonoBehaviour
             Destroy(currentMeshes[slotIndex].gameObject);
          }
          Equipment oldItem = currentEquipment[slotIndex];
+         SetEquipmentBlendShapes(oldItem, 0);
          inventory.Add(oldItem);
 
          currentEquipment[slotIndex] = null;
@@ -82,7 +90,11 @@ public class EquipmentManager : MonoBehaviour
             onEquipemntChanged.Invoke(null, oldItem);
          }
 
+         return oldItem;
+
       }
+
+      return null;
    }
 
    public void UnequipAll()
@@ -91,6 +103,8 @@ public class EquipmentManager : MonoBehaviour
       {
          Unequip(i);
       }
+
+      EquipDefaultItems();
    }
 
    // Update is called once per frame
@@ -107,6 +121,14 @@ public class EquipmentManager : MonoBehaviour
       foreach (EquipemntMeshRegion blendShape in item.coveredMeshRegions)
       {
          targetMesh.SetBlendShapeWeight((int)blendShape, weight);
+      }
+   }
+
+   void EquipDefaultItems()
+   {
+      foreach (Equipment item in defaultItems)
+      {
+         Equip(item);
       }
    }
 }

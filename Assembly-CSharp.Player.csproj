@@ -97,6 +97,7 @@
     <Compile Include="Assets\Scripts\PlayerMotor.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Components\BuiltinDebugViewsComponent.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\PostProcessingModel.cs" />
+    <Compile Include="Assets\Scripts\Helper\ConvertToRegularMesh.cs" />
     <Compile Include="Assets\Scripts\Items\EquipmentManager.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Models\ColorGradingModel.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Components\FxaaComponent.cs" />
