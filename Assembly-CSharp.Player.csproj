@@ -66,13 +66,13 @@
     <Compile Include="Assets\Scripts\Items\Item.cs" />
     <Compile Include="Assets\Scripts\Inventory\Inventory.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Utils\RenderTextureFactory.cs" />
+    <Compile Include="Assets\Scripts\Controllers\PlayerMotor.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Attributes\TrackballGroupAttribute.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Components\VignetteComponent.cs" />
     <Compile Include="Assets\Scripts\Inventory\InventoryUI.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Models\EyeAdaptationModel.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Models\ScreenSpaceReflectionModel.cs" />
     <Compile Include="Assets\Scripts\Interactable.cs" />
-    <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Models\BuiltinDebugViewsModel.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Components\AmbientOcclusionComponent.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Models\FogModel.cs" />
@@ -84,6 +84,8 @@
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Components\UserLutComponent.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Components\ScreenSpaceReflectionComponent.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Models\ChromaticAberrationModel.cs" />
+    <Compile Include="Assets\Scripts\Controllers\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\PlayerManager.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Models\VignetteModel.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Components\DitheringComponent.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Components\FogComponent.cs" />
@@ -91,11 +93,11 @@
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Components\BloomComponent.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Utilities\CustomMotionTexture\ExampleWheelController.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Utils\GraphicsUtils.cs" />
+    <Compile Include="Assets\Scripts\Controllers\EnemyController.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Models\MotionBlurModel.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\PostProcessingProfile.cs" />
     <Compile Include="Assets\Scripts\Items\Equipment.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Models\GrainModel.cs" />
-    <Compile Include="Assets\Scripts\PlayerMotor.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Components\BuiltinDebugViewsComponent.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\PostProcessingModel.cs" />
     <Compile Include="Assets\Scripts\Helper\ConvertToRegularMesh.cs" />
@@ -116,12 +118,12 @@
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Components\ChromaticAberrationComponent.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Utils\ColorGradingCurve.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Models\DepthOfFieldModel.cs" />
+    <Compile Include="Assets\Scripts\Controllers\CameraController.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Attributes\GetSetAttribute.cs" />
     <Compile Include="Assets\Scripts\Stats\CharacterStats.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Models\DitheringModel.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Models\UserLutModel.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\PostProcessingBehaviour.cs" />
-    <Compile Include="Assets\Scripts\CameraController.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Attributes\MinAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
