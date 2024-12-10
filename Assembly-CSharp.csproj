@@ -77,6 +77,7 @@
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Components\AmbientOcclusionComponent.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Models\FogModel.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Attributes\TrackballAttribute.cs" />
+    <Compile Include="Assets\Scripts\Enemy.cs" />
     <Compile Include="Assets\Scripts\Stats\PlayerStats.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Components\GrainComponent.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Models\BloomModel.cs" />
@@ -122,6 +123,7 @@
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Attributes\GetSetAttribute.cs" />
     <Compile Include="Assets\Scripts\Stats\CharacterStats.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Models\DitheringModel.cs" />
+    <Compile Include="Assets\Scripts\Stats\EnemyStats.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Models\UserLutModel.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\PostProcessingBehaviour.cs" />
     <Compile Include="Assets\Environment\PostProcessing\Runtime\Attributes\MinAttribute.cs" />

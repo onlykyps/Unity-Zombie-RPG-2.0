@@ -5982,6 +5982,8 @@ GameObject:
   - component: {fileID: 1334815552}
   - component: {fileID: 1334815556}
   - component: {fileID: 1334815557}
+  - component: {fileID: 1334815558}
+  - component: {fileID: 1334815559}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -6077,6 +6079,37 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1334815558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1334815551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caf1f730ab66bb24cb64c24fc9525e2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 4
+  interactionTransform: {fileID: 1334815555}
+--- !u!114 &1334815559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1334815551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2b5b396f6e4b9e499caea8cd7e708b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 40
+  damage:
+    baseValue: 5
+  armour:
+    baseValue: 3
 --- !u!1001 &1365476458
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7278,7 +7311,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!135 &1698305009
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -9165,6 +9198,7 @@ GameObject:
   - component: {fileID: 2118777391}
   - component: {fileID: 2118777392}
   - component: {fileID: 2118777393}
+  - component: {fileID: 2118777394}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -9317,6 +9351,19 @@ MonoBehaviour:
     baseValue: 5
   armour:
     baseValue: 0
+--- !u!114 &2118777394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118777385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5653c4846379efb47bf5139f8344183b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 2118777385}
 --- !u!4 &18146653651070182
 Transform:
   m_ObjectHideFlags: 0

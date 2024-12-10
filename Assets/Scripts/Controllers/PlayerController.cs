@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 public class PlayerController : MonoBehaviour
 {
    public LayerMask movementMask;
-   Camera camera;
+   Camera cam;
    PlayerMotor motor;
 
    public Interactable focus;
@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
    // Start is called once before the first execution of Update after the MonoBehaviour is created
    void Start()
    {
-      camera = Camera.main;
+      cam = Camera.main;
       motor = GetComponent<PlayerMotor>();
    }
 
@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
 
       if (Input.GetMouseButtonDown(0))
       {
-         Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
          RaycastHit raycastHit;
 
          if (Physics.Raycast(ray, out raycastHit, 100, movementMask))
@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
 
       if (Input.GetMouseButtonDown(1))
       {
-         Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
          RaycastHit raycastHit;
 
          if (Physics.Raycast(ray, out raycastHit, 100))
