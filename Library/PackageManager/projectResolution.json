@@ -396,7 +396,7 @@
       "version": "3.0.3",
       "source": "registry",
       "errors": [
-        "Package has invalid dependencies:\n  com.unity.test-framework.performance.tests: Package [com.unity.test-framework.performance.tests@3.0.3] cannot be found"
+        "Package has invalid dependencies:\n  com.unity.test-framework.performance.tests: Cannot fetch authorization code. User access token is expired or invalid. You may need to sign out and sign in again."
       ]
     }
   }
