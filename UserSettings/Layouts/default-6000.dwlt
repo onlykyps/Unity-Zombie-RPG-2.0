@@ -14,9 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PixelRect:
     serializedVersion: 2
+<<<<<<< HEAD
     x: 19
     y: 51
     width: 2085
+=======
+    x: 8
+    y: 51
+    width: 2544
+>>>>>>> parent of 4c88dda9 (idei...)
     height: 1341
   m_ShowMode: 4
   m_Title: Game
@@ -43,7 +49,11 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 36
+<<<<<<< HEAD
     width: 2085
+=======
+    width: 2544
+>>>>>>> parent of 4c88dda9 (idei...)
     height: 1285
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 16192}
@@ -65,9 +75,15 @@ MonoBehaviour:
   m_Children: []
   m_Position:
     serializedVersion: 2
+<<<<<<< HEAD
     x: 1624
     y: 0
     width: 461
+=======
+    x: 1999
+    y: 0
+    width: 545
+>>>>>>> parent of 4c88dda9 (idei...)
     height: 1285
   m_MinSize: {x: 276, y: 76}
   m_MaxSize: {x: 4001, y: 4026}
@@ -94,7 +110,11 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
+<<<<<<< HEAD
     width: 651
+=======
+    width: 423
+>>>>>>> parent of 4c88dda9 (idei...)
     height: 757
   m_MinSize: {x: 201, y: 226}
   m_MaxSize: {x: 4001, y: 4026}
@@ -120,7 +140,11 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 757
+<<<<<<< HEAD
     width: 1624
+=======
+    width: 1999
+>>>>>>> parent of 4c88dda9 (idei...)
     height: 528
   m_MinSize: {x: 231, y: 276}
   m_MaxSize: {x: 10001, y: 10026}
@@ -150,7 +174,11 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
+<<<<<<< HEAD
     width: 2085
+=======
+    width: 2544
+>>>>>>> parent of 4c88dda9 (idei...)
     height: 1341
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -175,7 +203,11 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
+<<<<<<< HEAD
     width: 2085
+=======
+    width: 2544
+>>>>>>> parent of 4c88dda9 (idei...)
     height: 36
   m_MinSize: {x: 0, y: 0}
   m_MaxSize: {x: 0, y: 0}
@@ -197,7 +229,11 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 1321
+<<<<<<< HEAD
     width: 2085
+=======
+    width: 2544
+>>>>>>> parent of 4c88dda9 (idei...)
     height: 20
   m_MinSize: {x: 0, y: 0}
   m_MaxSize: {x: 0, y: 0}
@@ -220,7 +256,11 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
+<<<<<<< HEAD
     width: 1624
+=======
+    width: 1999
+>>>>>>> parent of 4c88dda9 (idei...)
     height: 1285
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 16192}
@@ -246,7 +286,11 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
+<<<<<<< HEAD
     width: 1624
+=======
+    width: 1999
+>>>>>>> parent of 4c88dda9 (idei...)
     height: 757
   m_MinSize: {x: 200, y: 50}
   m_MaxSize: {x: 16192, y: 8096}
@@ -268,9 +312,15 @@ MonoBehaviour:
   m_Children: []
   m_Position:
     serializedVersion: 2
+<<<<<<< HEAD
     x: 651
     y: 0
     width: 973
+=======
+    x: 423
+    y: 0
+    width: 1576
+>>>>>>> parent of 4c88dda9 (idei...)
     height: 757
   m_MinSize: {x: 202, y: 226}
   m_MaxSize: {x: 4002, y: 4026}
@@ -429,9 +479,15 @@ MonoBehaviour:
     m_TextWithWhitespace: "Project\u200B"
   m_Pos:
     serializedVersion: 2
+<<<<<<< HEAD
     x: 19
     y: 844
     width: 1623
+=======
+    x: 8
+    y: 844
+    width: 1998
+>>>>>>> parent of 4c88dda9 (idei...)
     height: 502
   m_SerializedDataModeController:
     m_DataMode: 0
@@ -455,7 +511,11 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
+<<<<<<< HEAD
     - Assets
+=======
+    - Assets/Environment/Materials/Bridge
+>>>>>>> parent of 4c88dda9 (idei...)
     m_Globs: []
     m_ProductIds: 
     m_AnyWithAssetOrigin: 0
@@ -465,16 +525,27 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
+<<<<<<< HEAD
   - Assets
+=======
+  - Assets/Environment/Materials/Bridge
+>>>>>>> parent of 4c88dda9 (idei...)
   m_LastFoldersGridSize: -1
   m_LastProjectPath: D:\Dropbox\My Games\CV Games\Unity - Zombie RPG 2.0
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
+<<<<<<< HEAD
     scrollPos: {x: 0, y: 127}
     m_SelectedIDs: f8ae0000
     m_LastClickedID: 44792
     m_ExpandedIDs: 00000000f8ae0000faae0000fcae0000feae000000af000002af000004af000006af000008af00000aaf00000caf00000eaf000010af000012af000014af000016af000018af00001aaf000000ca9a3b
+=======
+    scrollPos: {x: 0, y: 162}
+    m_SelectedIDs: 5ae80000
+    m_LastClickedID: 59482
+    m_ExpandedIDs: 0000000034e7000036e7000038e700003ae700003ce700003ee7000040e7000042e7000044e7000046e7000048e700004ae700004ce700004ee7000050e7000052e7000054e7000056e7000032e8000000ca9a3b
+>>>>>>> parent of 4c88dda9 (idei...)
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -503,7 +574,11 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
+<<<<<<< HEAD
     m_ExpandedIDs: 00000000f8ae0000faae0000fcae0000feae000000af000002af000004af000006af000008af00000aaf00000caf00000eaf000010af000012af000014af000016af000018af00001aaf0000
+=======
+    m_ExpandedIDs: 0000000034e7000036e7000038e700003ae700003ce700003ee7000040e7000042e7000044e7000046e7000048e700004ae700004ce700004ee7000050e7000052e7000054e7000056e70000
+>>>>>>> parent of 4c88dda9 (idei...)
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -582,9 +657,15 @@ MonoBehaviour:
     m_TextWithWhitespace: "Debug\u200B"
   m_Pos:
     serializedVersion: 2
+<<<<<<< HEAD
     x: 1643
     y: 87
     width: 460
+=======
+    x: 2007
+    y: 87
+    width: 544
+>>>>>>> parent of 4c88dda9 (idei...)
     height: 1259
   m_SerializedDataModeController:
     m_DataMode: 0
@@ -631,9 +712,15 @@ MonoBehaviour:
     m_TextWithWhitespace: "Hierarchy\u200B"
   m_Pos:
     serializedVersion: 2
+<<<<<<< HEAD
     x: 19
     y: 87
     width: 650
+=======
+    x: 8
+    y: 87
+    width: 422
+>>>>>>> parent of 4c88dda9 (idei...)
     height: 731
   m_SerializedDataModeController:
     m_DataMode: 0
@@ -649,9 +736,15 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
+<<<<<<< HEAD
       m_SelectedIDs: c2ab0000
       m_LastClickedID: 43970
       m_ExpandedIDs: 4ef6ffff
+=======
+      m_SelectedIDs: f0bc0000
+      m_LastClickedID: 0
+      m_ExpandedIDs: 1648ffff
+>>>>>>> parent of 4c88dda9 (idei...)
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -697,9 +790,15 @@ MonoBehaviour:
     m_TextWithWhitespace: "Scene\u200B"
   m_Pos:
     serializedVersion: 2
+<<<<<<< HEAD
     x: 670
     y: 87
     width: 971
+=======
+    x: 431
+    y: 87
+    width: 1574
+>>>>>>> parent of 4c88dda9 (idei...)
     height: 731
   m_SerializedDataModeController:
     m_DataMode: 0
@@ -1171,9 +1270,15 @@ MonoBehaviour:
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
+<<<<<<< HEAD
     m_Target: {x: 0, y: 0, z: 0}
     speed: 2
     m_Value: {x: 0, y: 0, z: 0}
+=======
+    m_Target: {x: -11.4293995, y: -4.3986163, z: -1.7315694}
+    speed: 2
+    m_Value: {x: -11.4293995, y: -4.3986163, z: -1.7315694}
+>>>>>>> parent of 4c88dda9 (idei...)
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1223,9 +1328,15 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: -0.08717229, y: 0.89959055, z: -0.21045254, w: -0.3726226}
   m_Size:
+<<<<<<< HEAD
     m_Target: 12.683916
     speed: 2
     m_Value: 12.683916
+=======
+    m_Target: 9.986824
+    speed: 2
+    m_Value: 9.986824
+>>>>>>> parent of 4c88dda9 (idei...)
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -1277,9 +1388,15 @@ MonoBehaviour:
     m_TextWithWhitespace: "Console\u200B"
   m_Pos:
     serializedVersion: 2
+<<<<<<< HEAD
     x: 19
     y: 844
     width: 1247
+=======
+    x: 8
+    y: 844
+    width: 1998
+>>>>>>> parent of 4c88dda9 (idei...)
     height: 502
   m_SerializedDataModeController:
     m_DataMode: 0
@@ -1313,9 +1430,15 @@ MonoBehaviour:
     m_TextWithWhitespace: "Game\u200B"
   m_Pos:
     serializedVersion: 2
+<<<<<<< HEAD
     x: 670
     y: 87
     width: 971
+=======
+    x: 431
+    y: 87
+    width: 1574
+>>>>>>> parent of 4c88dda9 (idei...)
     height: 731
   m_SerializedDataModeController:
     m_DataMode: 0
@@ -1336,7 +1459,11 @@ MonoBehaviour:
   m_ShowGizmos: 0
   m_TargetDisplay: 0
   m_ClearColor: {r: 0, g: 0, b: 0, a: 0}
+<<<<<<< HEAD
   m_TargetSize: {x: 971, y: 710}
+=======
+  m_TargetSize: {x: 1574, y: 710}
+>>>>>>> parent of 4c88dda9 (idei...)
   m_TextureFilterMode: 0
   m_TextureHideFlags: 61
   m_RenderIMGUI: 1
@@ -1351,8 +1478,13 @@ MonoBehaviour:
     m_VRangeLocked: 0
     hZoomLockedByDefault: 0
     vZoomLockedByDefault: 0
+<<<<<<< HEAD
     m_HBaseRangeMin: -485.5
     m_HBaseRangeMax: 485.5
+=======
+    m_HBaseRangeMin: -787
+    m_HBaseRangeMax: 787
+>>>>>>> parent of 4c88dda9 (idei...)
     m_VBaseRangeMin: -355
     m_VBaseRangeMax: 355
     m_HAllowExceedBaseRangeMin: 1
@@ -1372,16 +1504,24 @@ MonoBehaviour:
       serializedVersion: 2
       x: 0
       y: 21
+<<<<<<< HEAD
       width: 971
       height: 710
     m_Scale: {x: 1, y: 1}
     m_Translation: {x: 485.5, y: 355}
+=======
+      width: 1574
+      height: 710
+    m_Scale: {x: 1, y: 1}
+    m_Translation: {x: 787, y: 355}
+>>>>>>> parent of 4c88dda9 (idei...)
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
     m_MarginBottom: 0
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
+<<<<<<< HEAD
       x: -485.5
       y: -355
       width: 971
@@ -1389,6 +1529,15 @@ MonoBehaviour:
     m_MinimalGUI: 1
   m_defaultScale: 1
   m_LastWindowPixelSize: {x: 971, y: 731}
+=======
+      x: -787
+      y: -355
+      width: 1574
+      height: 710
+    m_MinimalGUI: 1
+  m_defaultScale: 1
+  m_LastWindowPixelSize: {x: 1574, y: 731}
+>>>>>>> parent of 4c88dda9 (idei...)
   m_ClearInEditMode: 1
   m_NoCameraWarning: 1
   m_LowResolutionForAspectRatios: 01000000000000000000
