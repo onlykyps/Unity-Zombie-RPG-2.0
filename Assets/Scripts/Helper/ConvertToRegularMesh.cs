@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ConvertToRegularMesh : MonoBehaviour
 {
-   [ContextMenu("Convert to regular mesh")]
+   [ContextMenu("Conevrt to regular mesh")]
    void Convert()
    {
       SkinnedMeshRenderer skinnedMeshRenderer = GetComponent<SkinnedMeshRenderer>();

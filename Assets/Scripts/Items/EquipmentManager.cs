@@ -10,7 +10,7 @@ public class EquipmentManager : MonoBehaviour
    }
    #endregion
 
-   Equipment[] currentEquipment; // items we currently have equipped
+   Equipment[] currentEquipment;
    SkinnedMeshRenderer[] currentMeshes; // items we currently have equipped
 
    public SkinnedMeshRenderer targetMesh;
@@ -25,7 +25,7 @@ public class EquipmentManager : MonoBehaviour
    // Start is called once before the first execution of Update after the MonoBehaviour is created
    void Start()
    {
-      inventory = Inventory.instance; // get a ref to our inventory
+      inventory = Inventory.instance;
 
       // initialize currentEquipment based on number of equipment slots
       int numSlots = System.Enum.GetNames(typeof(EquipmentSlot)).Length;
@@ -60,7 +60,6 @@ public class EquipmentManager : MonoBehaviour
 
       SetEquipmentBlendShapes(newItem, 100);
 
-      // insert item into the slot
       currentEquipment[slotIndex] = newItem;
       SkinnedMeshRenderer newMesh = Instantiate<SkinnedMeshRenderer>(newItem.meshRenderer);
       newMesh.transform.parent = newMesh.transform;
@@ -74,19 +73,16 @@ public class EquipmentManager : MonoBehaviour
    // unequip an item with particular index
    public Equipment Unequip(int slotIndex)
    {
-      // only do this if an item is there
       if (currentEquipment[slotIndex] != null)
       {
-         if (currentMeshes[slotIndex] != null)
+         if (currentMeshes[slotIndex] == null)
          {
             Destroy(currentMeshes[slotIndex].gameObject);
          }
-         // add item to the inventory
          Equipment oldItem = currentEquipment[slotIndex];
          SetEquipmentBlendShapes(oldItem, 0);
          inventory.Add(oldItem);
 
-         // remove item from the equipment array
          currentEquipment[slotIndex] = null;
 
          if (onEquipemntChanged != null)
@@ -101,7 +97,6 @@ public class EquipmentManager : MonoBehaviour
       return null;
    }
 
-   // unequip all items
    public void UnequipAll()
    {
       for (int i = 0; i < currentEquipment.Length; i++)
@@ -115,7 +110,6 @@ public class EquipmentManager : MonoBehaviour
    // Update is called once per frame
    void Update()
    {
-      // unequip all items if you press U
       if (Input.GetKeyDown(KeyCode.U))
       {
          UnequipAll();
